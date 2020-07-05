@@ -4,6 +4,8 @@ import pandas as pd
 import flask
 
 app = flask.Flask(__name__, template_folder='templates')
+
+#Loading pickled versions of each model
 with open('model/atrmodel.pkl', 'rb') as f:
     dtreemodel = pickle.load(f)
 
@@ -18,7 +20,8 @@ with open('model/atrmodellr.pkl', 'rb') as f:
 
 with open('model/atrmodelknn.pkl', 'rb') as f:
     knnmodel = pickle.load(f)
-    
+
+#Main routing mechanism
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if flask.request.method == 'GET':
@@ -77,6 +80,7 @@ def main():
         a3=[]
         a4=[]
         a5=[]
+        #Each model votes for the attrition boolean value of the employee
         for i in range(shape):
             x=[]
             identity = EMPNO[i]+': '+EMPNAME[i]
@@ -99,7 +103,8 @@ def main():
         str2='Low Risk'
         str3='Mild Risk'
         str4='High Risk'
-        str5='Full Risk'        
+        str5='Full Risk'
+        #Post-Voting Categorisation under different attrition risk categories
         return flask.render_template('main.html', prediction0=a0, prediction1=a1, prediction2=a2, prediction3=a3, prediction4=a4, s1=str1, s2 =str2,s3=str3, s4=str4, s5=str5)    
         #return flask.render_template('main.html',prediction='{}'.format(count))
 if __name__ == '__main__':
